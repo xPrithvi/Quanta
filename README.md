@@ -11,4 +11,4 @@ ParticleInABox().ThreeDimensional(length_x = 1, length_y = 1, length_z = 1, quan
 ```
 Output:
 
-![Figure_1](https://github.com/xPrithvi/Quantum-Mechanics-Particle-In-A-Box-3D/blob/master/Figures/Figure_1.png)
+![Figure_1](https://github.com/xPrithvi/Quantum-Mechanics-Particle-In-A-Box-3D/blob/master/Figs/Figure_1.png)
