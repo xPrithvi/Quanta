@@ -12,63 +12,131 @@ class ParticleInABox():
 
     class OneDimensional():
 
-        def __init__(self, length_x, quantum_number):
+        def __init__(self, length_x, quantum_number, time_dependence):
 
             self.length_x = length_x
             self.quantum_number = quantum_number
+            self.time_dependence = time_dependence
 
         def wavefunction(self):
+            if self.time_dependence == True:
 
-            x = []
-            for i in range((self.length_x)*100):
-                u = i/100
-                x.append(u)
+                figure = plt.figure()
+                figure.show()
+
+                """Generate time intervals."""
+                t = []
+                for i in range(0, 1000):
+                    u = i*100
+                    t.append(u)
+
+                for time_interval in t:
+                    plt.clf()
+                    axis = figure.add_subplot(111)
+                    axis.autoscale(False)
+                    plt.xlim(0, self.length_x)
+                    plt.ylim(-1.5, 1.5)
+                    
+                    x = []
+                    for i in range((self.length_x)*100):
+                        u = i/100
+                        x.append(u)
         
-            y = []
+                    real_y = []
+                    imaginary_y = [] 
 
-            for i in x:
-                output = math.sqrt((2)/(self.length_x))*math.sin((math.pi*self.quantum_number*i)/(self.length_x))
-                y.append(output)
+                    for i in x:
+                        real_output = math.cos((pow(self.quantum_number, 2)*6.626*pow(10, -34)*math.pi*time_interval)/(4*9.109*pow(10, -31)*self.length_x))*math.sqrt((2)/(self.length_x))*math.sin((math.pi*self.quantum_number*i)/(self.length_x))
+                        imaginary_output = -1*math.sin((pow(self.quantum_number, 2)*6.626*pow(10, -34)*math.pi*time_interval)/(4*9.109*pow(10, -31)*self.length_x))*math.sqrt((2)/(self.length_x))*math.sin((math.pi*self.quantum_number*i)/(self.length_x))
+                        real_y.append(real_output)
+                        imaginary_y.append(imaginary_output)
 
-            figure = plt.figure()
-            axis = figure.add_subplot(111)
-            axis.plot(x, y, color = "blue")
-            axis.set_xlabel(r'$x$')
-            axis.set_ylabel(r'$\psi(x)$')
-            figure.show()
+                    axis.plot(x, real_y, color = "blue", label = r'$Re[\psi(x)$]')
+                    axis.plot(x, imaginary_y, color = "red", label = r'$Im[\psi(x)]$')
+                    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left', ncol=2, mode="expand", borderaxespad=0.)
+                    axis.set_xlabel(r'$x$')
+                    figure.canvas.draw()
+                    time.sleep(0.01)
+
+            else:
+                x = []
+                for i in range((self.length_x)*100):
+                    u = i/100
+                    x.append(u)
+        
+                y = []
+
+                for i in x:
+                    output = math.sqrt((2)/(self.length_x))*math.sin((math.pi*self.quantum_number*i)/(self.length_x))
+                    y.append(output)
+
+                plt.plot(x, y)
+                plt.show()
 
         def PDF(self):
 
-            x = []
-            for i in range((self.length_x)*100):
-                u = i/100
-                x.append(u)
+            if self.time_dependence == True:
 
-            y = []
+                figure = plt.figure()
+                figure.show()
 
-            for i in x:
-                output = (2/self.length_x)*pow(math.sin((math.pi*self.quantum_number*i)/(self.length_x)), 2)
-                y.append(output)
+                """Generate time intervals."""
+                t = []
+                for i in range(0, 1000):
+                    u = i*100
+                    t.append(u)
 
-            figure = plt.figure()
-            axis = figure.add_subplot(111)
-            axis.plot(x, y, color = "blue")
-            axis.set_xlabel(r'$x$')
-            axis.set_ylabel(r'$|\psi(x)|^2$')
-            figure.show()
+                for time_interval in t:
+                    plt.clf()
+                    axis = figure.add_subplot(111)
+                    axis.autoscale(False)
+                    plt.xlim(0, self.length_x)
+                    plt.ylim(-1.5, 1.5)
+                    
+                    x = []
+                    for i in range((self.length_x)*100):
+                        u = i/100
+                        x.append(u)
+        
+                    y = []
+
+                    for i in x:
+                        output = math.exp(-1*(pow(self.quantum_number, 2)*6.626*pow(10, -34)*math.pi*time_interval)/(4*9.109*pow(10, -31)*self.length_x))*(2/self.length_x)*pow(math.sin((math.pi*self.quantum_number*i)/(self.length_x)), 2)
+                        y.append(output)
+
+                    axis.plot(x, y, color = "blue")
+                    axis.set_xlabel(r'$x$')
+                    axis.set_ylabel(r'$|\psi(x)|^2$')
+                    figure.canvas.draw()
+                    time.sleep(0.01)
+
+            else:
+
+                x = []
+                for i in range((self.length_x)*100):
+                    u = i/100
+                    print(u)
+                    x.append(u)
+
+                y = []
+
+                for i in x:
+                    output = (2/self.length_x)*pow(math.sin((math.pi*self.quantum_number*i)/(self.length_x)), 2)
+                    y.append(output)
+
+                plt.plot(x, y)
+                plt.xlabel('\\alpha')
+                plt.ylabel('\\beta')
+                plt.show()
 
     class TwoDimensional():
 
-        def __init__(self, length_x, length_y, quantum_number_x, quantum_number_y, export):
+        def __init__(self, length_x, length_y, quantum_number_x, quantum_number_y):
 
             self.length_x = length_x
             self.length_y = length_y
             self.quantum_number_x = quantum_number_x
             self.quantum_number_y = quantum_number_y
-            self.export = export
-
-        def close(self):
-            pass
 
         def wavefunction(self):
 
@@ -92,13 +160,8 @@ class ParticleInABox():
             axis.set_xlabel(r'$x$')
             axis.set_ylabel(r'$y$')
             axis.set_zlabel(r'$\psi(x, y)$')
-            plt.title(r'$n_x =' + str(self.quantum_number_x) + ' ,n_y =' + str(self.quantum_number_y) + '$')
-            axis.view_init(elev = 20, azim = -135)
-            
-            if self.export == True:
-                plt.savefig('ParticleInABox_2D_Wavefunction_' + str(self.quantum_number_x) + '_' + str(self.quantum_number_y) + '.png')
-            else:
-                plt.show()
+            axis.view_init(elev = 30, azim = -135)
+            plt.show()
 
         def PDF(self):
 
@@ -122,13 +185,8 @@ class ParticleInABox():
             axis.set_xlabel(r'$x$')
             axis.set_ylabel(r'$y$')
             axis.set_zlabel(r'$|\psi(x, y)|^2$')
-            plt.title(r'$n_x =' + str(self.quantum_number_x) + ' ,n_y =' + str(self.quantum_number_y) + '$')
-            axis.view_init(elev = 20, azim = -135)
-
-            if self.export == True:
-                plt.savefig('ParticleInABox_2D_PDF_' + str(self.quantum_number_x) + '_' + str(self.quantum_number_y) + '.png')
-            else:
-                plt.show()
+            axis.view_init(elev = 30, azim = -135)
+            plt.show()
 
     class ThreeDimensional():
 
@@ -192,14 +250,13 @@ class ParticleInABox():
                 colour_plot.append(coordinate[3])
 
             """Generating plot"""
-            figure = plt.figure()
-            axis = figure.add_subplot(111, projection='3d')
-            img = axis.scatter(x_plot, y_plot, z_plot, c=colour_plot, cmap=plt.get_cmap('jet'))
-            figure.colorbar(img)
-            axis.set_xlabel(r'$x$')
-            axis.set_ylabel(r'$y$')
-            axis.set_zlabel(r'$|\psi(x, y)|^2$')
-            axis.view_init(elev = 30, azim = -135)
+            fig = plt.figure()
+            ax1 = fig.add_subplot(111, projection='3d')
+            img = ax1.scatter(x_plot, y_plot, z_plot, c=colour_plot, cmap=plt.get_cmap('jet'))
+            fig.colorbar(img)
+            ax1.set_xlabel(r'$x$')
+            ax1.set_ylabel(r'$y$')
+            ax1.set_zlabel(r'$|\psi(x, y)|^2$')
             plt.show()
 
         def PDF(self):
@@ -252,38 +309,14 @@ class ParticleInABox():
                 colour_plot.append(coordinate[3])
 
             """Generating plot"""
-            figure = plt.figure()
-            axis = figure.add_subplot(111, projection='3d')
-            img = axis.scatter(x_plot, y_plot, z_plot, c=colour_plot, cmap=plt.get_cmap('jet'))
-            figure.colorbar(img)
-            axis.set_xlabel(r'$x$')
-            axis.set_ylabel(r'$y$')
-            axis.set_zlabel(r'$z$')
+            fig = plt.figure()
+            ax1 = fig.add_subplot(111, projection='3d')
+            img = ax1.scatter(x_plot, y_plot, z_plot, c=colour_plot, cmap=plt.get_cmap('jet'))
+            fig.colorbar(img)
+            ax1.set_xlabel(r'$x$')
+            ax1.set_ylabel(r'$y$')
+            ax1.set_zlabel(r'$z$')
             plt.title(r'$|\psi(x, y, z)|^{2}$')
-            axis.view_init(elev = 30, azim = -135)
             plt.show()
 
-quantum_number_x_list = [1, 2, 3, 4, 5]
-quantum_number_y_list = [1, 2, 3, 4, 5]
-
-for quantum_number_x in quantum_number_x_list:
-    for quantum_number_y in quantum_number_y_list:
-        BOX = ParticleInABox().TwoDimensional(length_x = 1, length_y = 1, quantum_number_x = quantum_number_x, quantum_number_y = quantum_number_y, export = True).PDF()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ParticleInABox().OneDimensional(length_x = 1, quantum_number = 2, time_dependence = True).PDF()
