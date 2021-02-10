@@ -13,18 +13,28 @@ from matplotlib.figure import Figure
 # Importing PyQt5.
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-class App(QtWidgets.QMainWindow):
-    """"The App class inherits from the QMainWindow. It acts as a container for the MainWindow class
+class MainWindow(QtWidgets.QMainWindow):
+    """"The MainWindow class inherits from the QMainWindow. It acts as a container for the MainWindow class
         (QWidget) while also setting the window title and creating the statusbar."""
 
     def __init__(self):
         super().__init__()
 
-        # Setting the window title and assigning the MainWindow class as the central widget.
+        # Setting the window title, icon, and assigning the MainWindow class as the central widget.
         self.setWindowTitle("Quanta")
         self.setWindowIcon(QtGui.QIcon("Icon.png"))
-        self.MainWindow = MainWindow(self)
-        self.setCentralWidget(self.MainWindow)
+
+        # Creating instances of the tabs within the QMainWindow class.
+        self.ViewTab = ViewTab()
+        self.ConsoleTab = ConsoleTab()
+        self.ParametersTab = ParametersTab()
+
+        # Creating the QTabWidget and adding the instances of the tabs to it.
+        Tabs = QtWidgets.QTabWidget()
+        Tabs.addTab(self.ViewTab, "View")
+        Tabs.addTab(self.ConsoleTab, "Console")
+        Tabs.addTab(self.ParametersTab, "Parameters")
+        self.setCentralWidget(Tabs)
 
         # Creating the Statusbar.
         StatusBar = self.statusBar()
@@ -37,35 +47,23 @@ class App(QtWidgets.QMainWindow):
         # Creating the progressbar.
         self.ProgressBar = QtWidgets.QProgressBar(self)
 
+        # Creating buttons.
+        self.UpdateView = QtWidgets.QAction("Update View", self)
+
         # Adding widgets and buttons(actions) to the toolbar.
+        self.Toolbar.addAction(self.UpdateView)
         self.Toolbar.addWidget(self.ProgressBar)
+
+        # Buttons are connected to their respective handlers.
+        self.UpdateView.triggered.connect(MainWindow.UpdateView_handler)
 
         # Displaying the Graphical User Interface.
         self.show()
 
-class MainWindow(QtWidgets.QWidget):
+    def UpdateView_handler():
 
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
-
-        # Creating instances of the tabs within the MainWindow class.
-        Tabs = QtWidgets.QTabWidget()
-        self.ViewTab = ViewTab()
-        self.ConsoleTab = ConsoleTab()
-        self.ParametersTab = ParametersTab()
-
-        # Creating the QTabWidget and adding the instances of the tabs to it.
-        Tabs = QtWidgets.QTabWidget()
-        Tabs.addTab(self.ViewTab, "View")
-        Tabs.addTab(self.ConsoleTab, "Console")
-        Tabs.addTab(self.ParametersTab, "Parameters")
-
-        # Creating the layout for the MainWindow class.
-        Layout = QtWidgets.QVBoxLayout()
-        self.setLayout(Layout)
-
-        # Adding all widgets to the MainWindow class through the layout scheme.
-        Layout.addWidget(Tabs)
+        # Console output.
+        print("Event: UpdateView_handler")
 
 class MplCanvas(FigureCanvasQTAgg):
 
@@ -136,9 +134,27 @@ class ParametersTab(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
+        GridLayout = QtWidgets.QGridLayout()
+        self.setLayout(GridLayout)
+
+        Group = QtWidgets.QGroupBox("Quantum System")
+        self.QuantumSystem = QtWidgets.QComboBox(self)
+        self.QuantumSystem.resize(200, 25)
+        self.QuantumSystem.addItem("Particle in a Box (2D)")
+        GridLayout.addWidget(Group)
+
+        self.QuantumFunction = QtWidgets.QComboBox(self)
+        self.QuantumFunction.resize(200, 25)
+        self.QuantumFunction.addItem("Wavefunction")
+        self.QuantumFunction.addItem("Probability Density Function")
+
+        GridLayout.addWidget(Group)
+        GroupLayout = QtWidgets.QVBoxLayout()
+        GroupLayout.addWidget(self.QuantumSystem)
+        GroupLayout.addWidget(self.QuantumFunction)
+        Group.setLayout(GroupLayout)
+
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    GUI = App()
-    app.exec_()
-
-
+    application = QtWidgets.QApplication(sys.argv)
+    GUI = MainWindow()
+    application.exec_()
